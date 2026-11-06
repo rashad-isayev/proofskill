@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/rashad-isayev/proofskill/security/advisories/new
+    about: Do not disclose vulnerabilities, credentials, or personal data in public issues.
+  - name: Contribution policy and permissions
+    url: https://github.com/rashad-isayev/proofskill/blob/main/docs/CONTRIBUTING.md
+    about: Read the contribution terms and local-use permission requirements before starting work.

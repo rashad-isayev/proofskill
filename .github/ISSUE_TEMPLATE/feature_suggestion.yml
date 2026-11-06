@@ -1,0 +1,35 @@
+name: Feature suggestion
+description: Explain a problem and suggest a focused improvement.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. A suggestion does not guarantee implementation. Use fictional examples and keep credentials, personal data, and real invitation links out of this public issue.
+
+        Report vulnerabilities through [private reporting](https://github.com/rashad-isayev/proofskill/security/advisories/new). See the [contribution policy](https://github.com/rashad-isayev/proofskill/blob/main/docs/CONTRIBUTING.md) before starting work.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe who encounters the problem and when.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Explain the desired behavior and a focused scope.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: What would success look like?
+      description: Give concrete examples or acceptance criteria.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional alternatives or existing workarounds.

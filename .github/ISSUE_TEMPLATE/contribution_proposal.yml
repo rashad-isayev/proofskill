@@ -1,0 +1,37 @@
+name: Contribution proposal
+description: Discuss a focused contribution with the maintainer before starting.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a bug fix, test, documentation update, or focused improvement. Link an existing issue if applicable and wait for the maintainer to agree on scope before starting substantial work.
+
+        Read the [contribution policy](https://github.com/rashad-isayev/proofskill/blob/main/docs/CONTRIBUTING.md). Opening an issue does not grant permission to run or adapt the code outside GitHub; obtain the owner's permission first. Contributions remain subject to the policy's permission terms.
+
+        Use fictional examples. Never include credentials, personal data, or real invitation links. Report vulnerabilities through [private reporting](https://github.com/rashad-isayev/proofskill/security/advisories/new).
+  - type: textarea
+    id: scope
+    attributes:
+      label: What would you like to improve?
+      description: Explain the problem and link any related issue. Mention relevant files or documentation if known.
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Proposed approach
+      description: Outline the changes and what you intend to leave outside the scope.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: How would you verify the change?
+      description: Describe suitable tests or documentation checks using fictional data.
+    validations:
+      required: true
+  - type: textarea
+    id: questions
+    attributes:
+      label: Questions for the maintainer
+      description: Include any permission or scope questions that need agreement before work begins.
