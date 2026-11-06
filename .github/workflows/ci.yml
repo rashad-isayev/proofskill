@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend and unit checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm run test:request-limits
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:b2b
+
+  backend:
+    name: PostgreSQL and hiring checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: proofskill_ci
+          POSTGRES_USER: proofskill_ci
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 127.0.0.1:55432:5432
+        options: >-
+          --health-cmd "pg_isready -U proofskill_ci -d proofskill_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Configure disposable test database
+        shell: bash
+        run: |
+          umask 077
+          test_secret="$(openssl rand -hex 32)"
+          echo "::add-mask::$test_secret"
+          {
+            echo 'AUTH_DATABASE_URL=postgresql://proofskill_ci@127.0.0.1:55432/proofskill_ci'
+            echo 'BETTER_AUTH_URL=http://127.0.0.1:3100'
+            echo "BETTER_AUTH_SECRET=$test_secret"
+            echo 'RECORDING_ENABLED=false'
+          } > .env.local
+      - run: npm run auth:migrate
+      - run: npm run account:migrate
+      - run: npm run hiring:migrate
+      - run: npm run test:hiring:database
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:hiring:browser
